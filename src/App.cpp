@@ -12,6 +12,7 @@
 #include <iostream>
 
 #include <oatpp/parser/json/mapping/ObjectMapper.hpp>
+#include "AppComponent.hpp"
 
 
 using namespace std;
@@ -31,6 +32,8 @@ void run()
   auto connectionHandler = oatpp::web::server::HttpConnectionHandler::createShared(router);
 
   auto connectionProvider = oatpp::network::tcp::server::ConnectionProvider::createShared({"localhost", 1337, oatpp::network::Address::IP_4});
+
+  OATPP_COMPONENT(oatpp::network::ServerConnectionProvider)
 
   oatpp::network::Server server(connectionProvider, connectionHandler);
 
