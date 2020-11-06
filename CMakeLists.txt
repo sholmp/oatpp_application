@@ -7,8 +7,9 @@ find_package(oatpp 1.2.0 REQUIRED)
 LINK_DIRECTORIES("/usr/local/lib/oatpp-1.2.0")
 include_directories("/usr/local/include/oatpp-1.2.0/oatpp")
 
-set(source_files src/App.cpp
-                 src/controller/CustomHandler.cpp            
+set(source_files    src/App.cpp
+                    src/controller/CustomHandler.cpp   
+                    src/controller/CustomApiController.cpp
     )
 
 add_executable(exe ${source_files})

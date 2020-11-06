@@ -8,11 +8,15 @@
 
 #include "dto/DTOs.hpp"
 #include "dto/GnssPositionDto.hpp"
+#include "dto/AntennaDto.hpp"
 
 #include <iostream>
 
 #include <oatpp/parser/json/mapping/ObjectMapper.hpp>
 #include "AppComponent.hpp"
+
+#include "controller/CustomApiController.hpp"
+
 
 
 using namespace std;
@@ -20,9 +24,14 @@ using namespace std;
 
 void run()
 {
-  auto router = oatpp::web::server::HttpRouter::createShared();
 
-  auto json_object_mapper = oatpp::parser::json::mapping::ObjectMapper::createShared();
+  AppComponent components; //register components with oatpp environment
+
+  OATPP_COMPONENT(shared_ptr<oatpp::web::server::HttpRouter>, router);
+
+  // auto json_object_mapper = oatpp::parser::json::mapping::ObjectMapper::createShared();
+
+  OATPP_COMPONENT(shared_ptr<oatpp::data::mapping::ObjectMapper>, json_object_mapper);
 
   shared_ptr<CustomHandler> handler = std::make_shared<CustomHandler>(json_object_mapper);
 
@@ -34,13 +43,12 @@ void run()
   auto connectionProvider = oatpp::network::tcp::server::ConnectionProvider::createShared({"localhost", 1337, oatpp::network::Address::IP_4});
 
   // OATPP_COMPONENT(oatpp::network::ServerConnectionProvider, )
-
+  
   oatpp::network::Server server(connectionProvider, connectionHandler);
 
   OATPP_LOGI("Shp Server", "Server running on port %s", connectionProvider->getProperty("port").getData());
 
   server.run();
-
 
 
 }
@@ -49,6 +57,14 @@ int main()
 {
 
   oatpp::base::Environment::init();
+
+
+  // OATPP_COMPONENT(oatpp::data::mapping::ObjectMapper, json_objet_mapper);
+
+  auto dto = AntennaDto::createShared();
+
+  // json_objet_mapper.writeToString
+
 
   run();
 
