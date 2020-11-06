@@ -33,7 +33,7 @@ void run()
 
   auto connectionProvider = oatpp::network::tcp::server::ConnectionProvider::createShared({"localhost", 1337, oatpp::network::Address::IP_4});
 
-  OATPP_COMPONENT(oatpp::network::ServerConnectionProvider)
+  // OATPP_COMPONENT(oatpp::network::ServerConnectionProvider, )
 
   oatpp::network::Server server(connectionProvider, connectionHandler);
 
