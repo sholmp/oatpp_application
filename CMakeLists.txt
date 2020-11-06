@@ -1,5 +1,6 @@
 project(oatpp_testing)
 cmake_minimum_required(VERSION 3.0)
+set(CMAKE_BUILD_TYPE Debug)
 
 find_package(oatpp 1.2.0 REQUIRED)
 
