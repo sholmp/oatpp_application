@@ -13,7 +13,6 @@
 #include <oatpp/parser/json/mapping/ObjectMapper.hpp>
 #include "AppComponent.hpp"
 
-#include "controller/CustomApiController.hpp"
 #include "controller/AntennaApiController.hpp"
 
 
@@ -27,23 +26,11 @@ void run()
 
   OATPP_COMPONENT(shared_ptr<oatpp::web::server::HttpRouter>, router);
 
-  // auto json_object_mapper = oatpp::parser::json::mapping::ObjectMapper::createShared();
-
   OATPP_COMPONENT(shared_ptr<oatpp::data::mapping::ObjectMapper>, json_object_mapper);
-
-  // shared_ptr<CustomHandler> handler = std::make_shared<CustomHandler>(json_object_mapper);
-
-  // router->route("GET", "/hello", handler);
-
-  CustomApiController api_controller(json_object_mapper);
-
-  api_controller.addEndpointsToRouter(router);
 
   AntennaApiController antenna_api_controller(json_object_mapper);
 
   antenna_api_controller.addEndpointsToRouter(router);
-
-
 
   auto connectionHandler = oatpp::web::server::HttpConnectionHandler::createShared(router);
 

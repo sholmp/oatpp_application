@@ -22,6 +22,9 @@ public:
     ENDPOINT("GET", "/antenna", antenna)
     {
         auto antenna_dto = AntennaDto::createShared();
+        antenna_dto->m_buc.lo_freq = 10;
+        antenna_dto->description = "Antenna information";
+        return createDtoResponse(Status::CODE_200, antenna_dto);
     }
 
     ENDPOINT("DELETE", "/remove", remove)
