@@ -19,11 +19,13 @@ public:
     {}
 
 
-    ENDPOINT("GET", "/antenna", antenna)
+    ENDPOINT("GET", "/antenna", antennaEndpoint)
     {
         auto antenna_dto = AntennaDto::createShared();
-        antenna_dto->m_buc.lo_freq = 10;
-        antenna_dto->description = "Antenna information";
+        // antenna_dto->m_buc.lo_freq = 10;
+        // antenna_dto->buc
+        
+        // antenna_dto->description = "Antenna information";
         return createDtoResponse(Status::CODE_200, antenna_dto);
     }
 
@@ -36,6 +38,11 @@ public:
 
 
 };
+
+// std::shared_ptr<AntennaApiController::OutgoingResponse> AntennaApiController::antennaEndpoint(const String& param)
+// {
+    
+// }
 
 #include OATPP_CODEGEN_END(ApiController)
 

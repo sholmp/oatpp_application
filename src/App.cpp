@@ -4,8 +4,6 @@
 #include <oatpp/network/Server.hpp>
 #include <oatpp/network/tcp/server/ConnectionProvider.hpp>
 
-#include "dto/DTOs.hpp"
-#include "dto/GnssPositionDto.hpp"
 #include "dto/AntennaDto.hpp"
 
 #include <iostream>
@@ -14,7 +12,7 @@
 #include "AppComponent.hpp"
 
 #include "controller/AntennaApiController.hpp"
-
+#include "controller/VesselApiController.hpp"
 
 using namespace std;
 
@@ -29,14 +27,14 @@ void run()
   OATPP_COMPONENT(shared_ptr<oatpp::data::mapping::ObjectMapper>, json_object_mapper);
 
   AntennaApiController antenna_api_controller(json_object_mapper);
+  VesselApiController vessel_api_controller(json_object_mapper);
 
   antenna_api_controller.addEndpointsToRouter(router);
-
+  vessel_api_controller.addEndpointsToRouter(router);
+  
   auto connectionHandler = oatpp::web::server::HttpConnectionHandler::createShared(router);
 
   auto connectionProvider = oatpp::network::tcp::server::ConnectionProvider::createShared({"localhost", 1337, oatpp::network::Address::IP_4});
-
-  // OATPP_COMPONENT(oatpp::network::ServerConnectionProvider, )
   
   oatpp::network::Server server(connectionProvider, connectionHandler);
 
@@ -49,16 +47,9 @@ void run()
 
 int main()
 {
-
   oatpp::base::Environment::init();
 
-
-  // OATPP_COMPONENT(oatpp::data::mapping::ObjectMapper, json_objet_mapper);
-
   auto dto = AntennaDto::createShared();
-
-  // json_objet_mapper.writeToString
-
 
   run();
 

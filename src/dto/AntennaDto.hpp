@@ -16,10 +16,7 @@ class BucDto : oatpp::DTO
 class AntennaDto : oatpp::DTO
 {
     DTO_INIT(AntennaDto, DTO /*extends DTO*/)
-    DTO_FIELD(String, description);
-
-    BucDto m_buc;
-
+    DTO_FIELD(Float32, buc_lo_freq);
 };
 
 
