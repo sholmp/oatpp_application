@@ -13,7 +13,6 @@ class BucDto : oatpp::DTO
 
 };
 
-
 class AntennaDto : oatpp::DTO
 {
     DTO_INIT(AntennaDto, DTO /*extends DTO*/)

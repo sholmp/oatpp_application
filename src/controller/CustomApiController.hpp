@@ -11,22 +11,34 @@
 #include OATPP_CODEGEN_BEGIN(ApiController)
 
 
-class CustomApiController : oatpp::web::server::api::ApiController
+class CustomApiController : public oatpp::web::server::api::ApiController
 {
 public:
     CustomApiController(std::shared_ptr<oatpp::data::mapping::ObjectMapper> object_mapper);
 
     
+    ENDPOINT("GET", "/yolo", yolo)
+    {
+        return createResponse(Status::CODE_200, "yolo endpoint hit");
+    }
 
-    // ENDPOINT("GET", "/yolo", root)
-    // {
-    //     return createResponse(Status::CODE_200, "yolo endpoint hit");
-    // }
 
+    ENDPOINT("GET", "/antenna/", antenna)
+    {
+        auto antenna_dto = AntennaDto::createShared();
+        antenna_dto->description = "Antenna information";
 
-//   ENDPOINT("GET", "/", root) {
-//     return createResponse(Status::CODE_200, "Hello World!");
-//   }
+        return createDtoResponse(Status::CODE_200, antenna_dto);
+    }
+
+    ENDPOINT("GET", "/antenna/buc/lo-freq", jeigojgoiegwoe)
+    {
+        auto buc_dto = BucDto::createShared();
+        buc_dto->lo_freq = 123.4;
+
+        return createDtoResponse(Status::CODE_200, buc_dto);
+    }
+
 
 
 
