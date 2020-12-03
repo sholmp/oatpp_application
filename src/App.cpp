@@ -4,56 +4,54 @@
 #include <oatpp/network/Server.hpp>
 #include <oatpp/network/tcp/server/ConnectionProvider.hpp>
 
-#include "dto/AntennaDto.hpp"
-
 #include <iostream>
 
 #include <oatpp/parser/json/mapping/ObjectMapper.hpp>
-#include "AppComponent.hpp"
+#include <oatpp-swagger/Controller.hpp>
 
-#include "controller/AntennaApiController.hpp"
-#include "controller/VesselApiController.hpp"
+#include "AppComponent.hpp"
+#include "SwaggerComponent.hpp"
+
+
+#include "controller/CustomApiController.hpp"
 
 using namespace std;
 
 
 void run()
 {
+    AppComponent components; //register components with oatpp environment
+    SwaggerComponent swagger_component;
 
-  AppComponent components; //register components with oatpp environment
+    OATPP_COMPONENT(shared_ptr<oatpp::web::server::HttpRouter>, router);
+    OATPP_COMPONENT(shared_ptr<oatpp::data::mapping::ObjectMapper>, json_object_mapper);
 
-  OATPP_COMPONENT(shared_ptr<oatpp::web::server::HttpRouter>, router);
+    CustomApiController custom_api_controller(json_object_mapper);
+    custom_api_controller.addEndpointsToRouter(router);
+    
+    auto docEndpoints = oatpp::swagger::Controller::Endpoints::createShared();
+    docEndpoints->pushBackAll(custom_api_controller.getEndpoints());
+    auto swagger_controller = oatpp::swagger::Controller::createShared(docEndpoints);
+    swagger_controller->addEndpointsToRouter(router);
 
-  OATPP_COMPONENT(shared_ptr<oatpp::data::mapping::ObjectMapper>, json_object_mapper);
+    auto connectionHandler = oatpp::web::server::HttpConnectionHandler::createShared(router);
 
-  AntennaApiController antenna_api_controller(json_object_mapper);
-  VesselApiController vessel_api_controller(json_object_mapper);
+    auto connectionProvider = oatpp::network::tcp::server::ConnectionProvider::createShared({"localhost", 80, oatpp::network::Address::IP_4});
 
-  antenna_api_controller.addEndpointsToRouter(router);
-  vessel_api_controller.addEndpointsToRouter(router);
-  
-  auto connectionHandler = oatpp::web::server::HttpConnectionHandler::createShared(router);
+    oatpp::network::Server server(connectionProvider, connectionHandler);
 
-  auto connectionProvider = oatpp::network::tcp::server::ConnectionProvider::createShared({"localhost", 1337, oatpp::network::Address::IP_4});
-  
-  oatpp::network::Server server(connectionProvider, connectionHandler);
+    OATPP_LOGI("Shp Server", "Server running on port %s", connectionProvider->getProperty("port").getData());
 
-  OATPP_LOGI("Shp Server", "Server running on port %s", connectionProvider->getProperty("port").getData());
-
-  server.run();
-
-
+    server.run();
 }
 
 int main()
 {
-  oatpp::base::Environment::init();
+    oatpp::base::Environment::init();
 
-  auto dto = AntennaDto::createShared();
+    run();
 
-  run();
+    oatpp::base::Environment::destroy();
 
-  oatpp::base::Environment::destroy();
-
-  return 0;   
+    return 0;   
 }

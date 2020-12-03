@@ -6,7 +6,7 @@
 #include <oatpp/parser/json/mapping/ObjectMapper.hpp>
 #include <oatpp/core/data/mapping/ObjectMapper.hpp>
 #include <oatpp/web/server/HttpRouter.hpp>
-
+#include <oatpp/parser/json/mapping/Serializer.hpp>
 
 
 class AppComponent
@@ -23,17 +23,15 @@ public:
         []{return oatpp::network::tcp::server::ConnectionProvider::createShared({"localhost", 8000, oatpp::network::Address::IP_4});}()
     );
 
-    OATPP_CREATE_COMPONENT(std::shared_ptr<oatpp::data::mapping::ObjectMapper>, json_object_mapper)
-    (
-        []{return oatpp::parser::json::mapping::ObjectMapper::createShared();}()
-    );
 
+    OATPP_CREATE_COMPONENT(std::shared_ptr<oatpp::data::mapping::ObjectMapper>, json_object_mapper)([]{
+        // auto config = oatpp::parser::json::mapping::Serializer::Config::createShared();
+        auto serialize_config = oatpp::parser::json::mapping::Serializer::Config::createShared();
+        auto deserialize_config = oatpp::parser::json::mapping::Deserializer::Config::createShared();
+        serialize_config->useBeautifier = true;
+        return oatpp::parser::json::mapping::ObjectMapper::createShared(serialize_config, deserialize_config);
+    }());
 
-
-    // OATPP_CREATE_COMPONENT(std::shared_ptr<oatpp::data::mapping::ObjectMapper>, json_object_mapper)
-    // (
-    //     []{return oatpp::parser::json::mapping::ObjectMapper::createShared();}()
-    // );
 
 
 
